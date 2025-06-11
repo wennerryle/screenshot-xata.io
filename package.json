@@ -6,7 +6,7 @@
   "module": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xataio/screenshot"
+    "url": "https://github.com/wennerryle/screenshot-xata.io"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
