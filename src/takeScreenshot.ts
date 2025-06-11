@@ -1,6 +1,7 @@
 import { createVideoElementToCaptureFrames } from "./createVideoElementToCaptureFrames";
 import { paintVideoFrameOnCanvas } from "./paintVideoFrameOnCanvas";
 import { playCameraClickSound } from "./playCameraClickSound";
+import { requestDisplayMedia } from "./requestDisplayMedia";
 import { sleep } from "./sleep";
 import { stopCapture } from "./stopCapture";
 import { waitForFocus } from "./waitForFocus";
@@ -33,6 +34,7 @@ type Options = {
    * @optional
    */
   soundEffectUrl?: string;
+  mediaStream?: MediaStream;
 };
 
 /**
@@ -44,15 +46,16 @@ export const takeScreenshot = async ({
   quality = 0.7,
   type = "image/jpeg",
   soundEffectUrl,
+  mediaStream,
 }: Options = {}) => {
   await onCaptureStart?.();
-  return navigator.mediaDevices
-    .getDisplayMedia({
-      // This is actually supported, but only in Chrome so not yet part of the TS typedefs, so
-      // @ts-ignore
-      preferCurrentTab: true,
-      video: { frameRate: 30 },
-    })
+
+  const _mediaStream =
+    mediaStream !== undefined
+      ? Promise.resolve(mediaStream)
+      : requestDisplayMedia();
+
+  return _mediaStream
     .then(waitForFocus) // We can only proceed if our tab is in focus.
     .then(async (result) => {
       // So we mount the screen capture to a video element...
