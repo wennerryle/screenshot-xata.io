@@ -58,8 +58,7 @@ export const takeScreenshot = async ({
   return _mediaStream
     .then(waitForFocus) // We can only proceed if our tab is in focus.
     .then(async (result) => {
-      const clonedStream = new MediaStream();
-      result.getTracks().forEach((track) => clonedStream.addTrack(track));
+      const clonedStream = result.clone();
 
       // So we mount the screen capture to a video element...
       const video = createVideoElementToCaptureFrames(clonedStream);
